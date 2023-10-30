@@ -1,96 +1,96 @@
 {
-  "name": "vscode-jupyter-slideshow",
-  "displayName": "Jupyter Slide Show",
-  "version": "0.0.1",
-  "private": "false",
-  "description": "Jupyter Slide Show support for VS Code",
-  "categories": [
-    "Notebooks"
-  ],
-  "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
-  "bugs": {
-    "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
-  },
-  "license": "MIT",
-  "author": {
-    "name": "Nikola Hristov",
-    "email": "nikola@nikolahristov.tech",
-    "url": "https://nikolahristov.tech"
-  },
-  "publisher": "playform",
-  "type": "module",
-  "main": "./out/extension-node.js",
-  "browser": "./out/extension-web.js",
-  "scripts": {
-    "compile": "webpack --mode none",
-    "lint": "eslint src --ext ts",
-    "prepublishOnly": "TypeScriptESBuild Source/**/*.ts",
-    "pretest": "npm run compile && npm run lint",
-    "test": "node ./out/test/runTest.js",
-    "vscode:prepublish": "npm run compile",
-    "watch": "webpack --mode none --watch"
-  },
-  "contributes": {
-    "commands": [
-      {
-        "command": "jupyter-slideshow.switchSlideType",
-        "title": "Switch Slide Type"
-      },
-      {
-        "command": "jupyter-slideshow.editSlideShowInJSON",
-        "title": "Edit Slide Type (JSON)",
-        "icon": "$(go-to-file)"
-      }
-    ],
-    "menus": {
-      "notebook/cell/title": [
-        {
-          "command": "jupyter-slideshow.switchSlideType",
-          "group": "jupyter-slideshow@1"
-        },
-        {
-          "command": "jupyter-slideshow.editSlideShowInJSON",
-          "group": "jupyter-slideshow@2"
-        }
-      ]
-    }
-  },
-  "activationEvents": [
-    "onNotebook:jupyter-notebook",
-    "onCommand:jupyter-slideshow.switchSlideType",
-    "onCommand:jupyter-slideshow.editSlideShowInJSON"
-  ],
-  "devDependencies": {
-    "@types/glob": "8.1.0",
-    "@types/mocha": "10.0.3",
-    "@types/node": "20.x",
-    "@types/vscode": "1.83.1",
-    "@typescript-eslint/eslint-plugin": "6.9.0",
-    "@typescript-eslint/parser": "6.9.0",
-    "eslint": "8.52.0",
-    "glob": "10.3.10",
-    "mocha": "10.2.0",
-    "ts-loader": "9.5.0",
-    "typescript": "5.2.2",
-    "typescript-esbuild": "0.3.1",
-    "vscode-test": "1.5.2",
-    "webpack": "5.89.0",
-    "webpack-cli": "5.1.4"
-  },
-  "engines": {
-    "vscode": "1.71.0"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "icon": "icon.png",
-  "galleryBanner": {
-    "color": "#ffffff",
-    "theme": "light"
-  },
-  "preview": true
+	"name": "vscode-jupyter-slideshow",
+	"displayName": "Jupyter Slide Show",
+	"version": "0.0.1",
+	"private": "false",
+	"description": "Jupyter Slide Show support for VS Code",
+	"categories": [
+		"Notebooks"
+	],
+	"homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
+	"bugs": {
+		"url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "Nikola Hristov",
+		"email": "nikola@nikolahristov.tech",
+		"url": "https://nikolahristov.tech"
+	},
+	"publisher": "playform",
+	"type": "module",
+	"main": "./out/extension-node.js",
+	"browser": "./out/extension-web.js",
+	"scripts": {
+		"compile": "webpack --mode none",
+		"lint": "eslint src --ext ts",
+		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'",
+		"pretest": "npm run compile && npm run lint",
+		"test": "node ./out/test/runTest.js",
+		"vscode:prepublish": "npm run compile",
+		"watch": "webpack --mode none --watch"
+	},
+	"contributes": {
+		"commands": [
+			{
+				"command": "jupyter-slideshow.switchSlideType",
+				"title": "Switch Slide Type"
+			},
+			{
+				"command": "jupyter-slideshow.editSlideShowInJSON",
+				"title": "Edit Slide Type (JSON)",
+				"icon": "$(go-to-file)"
+			}
+		],
+		"menus": {
+			"notebook/cell/title": [
+				{
+					"command": "jupyter-slideshow.switchSlideType",
+					"group": "jupyter-slideshow@1"
+				},
+				{
+					"command": "jupyter-slideshow.editSlideShowInJSON",
+					"group": "jupyter-slideshow@2"
+				}
+			]
+		}
+	},
+	"activationEvents": [
+		"onNotebook:jupyter-notebook",
+		"onCommand:jupyter-slideshow.switchSlideType",
+		"onCommand:jupyter-slideshow.editSlideShowInJSON"
+	],
+	"devDependencies": {
+		"@types/glob": "8.1.0",
+		"@types/mocha": "10.0.3",
+		"@types/node": "20.x",
+		"@types/vscode": "1.83.1",
+		"@typescript-eslint/eslint-plugin": "6.9.0",
+		"@typescript-eslint/parser": "6.9.0",
+		"eslint": "8.52.0",
+		"glob": "10.3.10",
+		"mocha": "10.2.0",
+		"ts-loader": "9.5.0",
+		"typescript": "5.2.2",
+		"typescript-esbuild": "0.3.1",
+		"vscode-test": "1.5.2",
+		"webpack": "5.89.0",
+		"webpack-cli": "5.1.4"
+	},
+	"engines": {
+		"vscode": "1.71.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"icon": "icon.png",
+	"galleryBanner": {
+		"color": "#ffffff",
+		"theme": "light"
+	},
+	"preview": true
 }
