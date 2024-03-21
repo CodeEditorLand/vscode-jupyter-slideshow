@@ -1,32 +1,10 @@
 {
-	"name": "vscode-jupyter-slideshow",
-	"displayName": "Jupyter Slide Show",
-	"version": "0.0.1",
-	"private": false,
-	"description": "Jupyter Slide Show support for VS Code",
-	"homepage": "https://github.com/CodeEditorLand/Foundation#readme",
-	"bugs": {
-		"url": "https://github.com/CodeEditorLand/Foundation/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/CodeEditorLand/Foundation.git"
-	},
-	"license": "SEE LICENSE IN LICENSE",
-	"author": {
-		"name": "Playform",
-		"email": "Hello@Playform.Cloud",
-		"url": "https://playform.cloud"
-	},
-	"type": "module",
-	"main": "./out/extension-node.js",
+	"activationEvents": [
+		"onNotebook:jupyter-notebook",
+		"onCommand:jupyter-slideshow.switchSlideType",
+		"onCommand:jupyter-slideshow.editSlideShowInJSON"
+	],
 	"browser": "./out/extension-web.js",
-	"scripts": {
-		"compile": "webpack --mode none",
-		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'",
-		"vscode:prepublish": "npm run compile",
-		"watch": "webpack --mode none --watch"
-	},
 	"contributes": {
 		"commands": [
 			{
@@ -52,11 +30,7 @@
 			]
 		}
 	},
-	"activationEvents": [
-		"onNotebook:jupyter-notebook",
-		"onCommand:jupyter-slideshow.switchSlideType",
-		"onCommand:jupyter-slideshow.editSlideShowInJSON"
-	],
+	"description": "Jupyter Slide Show support for VS Code",
 	"devDependencies": {
 		"@types/glob": "^7.1.3",
 		"@types/mocha": "^8.2.2",
@@ -71,13 +45,20 @@
 		"webpack": "^5.36.2",
 		"webpack-cli": "^4.6.0"
 	},
-	"publishConfig": {
-		"access": "public"
-	},
-	"icon": "icon.png",
+	"displayName": "Jupyter Slide Show",
 	"galleryBanner": {
 		"color": "#ffffff",
 		"theme": "light"
 	},
-	"preview": true
+	"icon": "icon.png",
+	"main": "./out/extension-node.js",
+	"name": "vscode-jupyter-slideshow",
+	"preview": true,
+	"scripts": {
+		"compile": "webpack --mode none",
+		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'",
+		"vscode:prepublish": "npm run compile",
+		"watch": "webpack --mode none --watch"
+	},
+	"type": "module"
 }
