@@ -1,0 +1,83 @@
+{
+	"name": "vscode-jupyter-slideshow",
+	"displayName": "Jupyter Slide Show",
+	"version": "0.0.1",
+	"private": false,
+	"description": "Jupyter Slide Show support for VS Code",
+	"homepage": "https://github.com/CodeEditorLand/Foundation#readme",
+	"bugs": {
+		"url": "https://github.com/CodeEditorLand/Foundation/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/CodeEditorLand/Foundation.git"
+	},
+	"license": "SEE LICENSE IN LICENSE",
+	"author": {
+		"name": "Playform",
+		"email": "Hello@Playform.Cloud",
+		"url": "https://playform.cloud"
+	},
+	"type": "module",
+	"main": "./out/extension-node.js",
+	"browser": "./out/extension-web.js",
+	"scripts": {
+		"compile": "webpack --mode none",
+		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'",
+		"vscode:prepublish": "npm run compile",
+		"watch": "webpack --mode none --watch"
+	},
+	"contributes": {
+		"commands": [
+			{
+				"command": "jupyter-slideshow.switchSlideType",
+				"title": "Switch Slide Type"
+			},
+			{
+				"command": "jupyter-slideshow.editSlideShowInJSON",
+				"icon": "$(go-to-file)",
+				"title": "Edit Slide Type (JSON)"
+			}
+		],
+		"menus": {
+			"notebook/cell/title": [
+				{
+					"command": "jupyter-slideshow.switchSlideType",
+					"group": "jupyter-slideshow@1"
+				},
+				{
+					"command": "jupyter-slideshow.editSlideShowInJSON",
+					"group": "jupyter-slideshow@2"
+				}
+			]
+		}
+	},
+	"activationEvents": [
+		"onNotebook:jupyter-notebook",
+		"onCommand:jupyter-slideshow.switchSlideType",
+		"onCommand:jupyter-slideshow.editSlideShowInJSON"
+	],
+	"devDependencies": {
+		"@types/glob": "^7.1.3",
+		"@types/mocha": "^8.2.2",
+		"@types/node": "14.x",
+		"@types/vscode": "^1.71.0",
+		"glob": "^7.1.7",
+		"mocha": "^10.0.0",
+		"ts-loader": "^9.1.1",
+		"typescript": "^4.3.2",
+		"typescript-esbuild": "0.4.5",
+		"vscode-test": "^1.5.2",
+		"webpack": "^5.36.2",
+		"webpack-cli": "^4.6.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"icon": "icon.png",
+	"galleryBanner": {
+		"color": "#ffffff",
+		"theme": "light"
+	},
+	"preview": true
+}
