@@ -1,17 +1,33 @@
 {
-	"activationEvents": [
-		"onNotebook:jupyter-notebook",
-		"onCommand:jupyter-slideshow.switchSlideType",
-		"onCommand:jupyter-slideshow.editSlideShowInJSON"
+	"name": "vscode-jupyter-slideshow",
+	"displayName": "Jupyter Slide Show",
+	"version": "0.0.1",
+	"private": false,
+	"description": "Jupyter Slide Show support for VS Code",
+	"keywords": [
+		"land"
 	],
-	"author": {
-		"email": "Land@PlayForm.Cloud",
-		"name": "🌆 — Land —",
-		"url": "HTTPS://Land.PlayForm.Cloud"
-	},
-	"browser": "./out/extension-web.js",
+	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandJupyterSlideshow#readme",
 	"bugs": {
 		"url": "HTTPS://GitHub.Com/CodeEditorLand/LandJupyterSlideshow/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+HTTPS://github.com/CodeEditorLand/LandJupyterSlideshow.git"
+	},
+	"license": "SEE LICENSE IN LICENSE",
+	"author": {
+		"name": "🌆 — Land —",
+		"email": "Land@PlayForm.Cloud",
+		"url": "HTTPS://Land.PlayForm.Cloud"
+	},
+	"type": "module",
+	"main": "./out/extension-node.js",
+	"browser": "./out/extension-web.js",
+	"scripts": {
+		"Document": "Document 'Source/**/*.ts'",
+		"compile": "webpack --mode none",
+		"prepublishOnly": "Build 'Source/**/*.ts'"
 	},
 	"contributes": {
 		"commands": [
@@ -38,7 +54,11 @@
 			]
 		}
 	},
-	"description": "Jupyter Slide Show support for VS Code",
+	"activationEvents": [
+		"onNotebook:jupyter-notebook",
+		"onCommand:jupyter-slideshow.switchSlideType",
+		"onCommand:jupyter-slideshow.editSlideShowInJSON"
+	],
 	"devDependencies": {
 		"@playform/build": "0.0.7",
 		"@playform/document": "0.0.6",
@@ -47,33 +67,13 @@
 		"glob": "10.3.12",
 		"ts-loader": "9.5.1"
 	},
-	"displayName": "Jupyter Slide Show",
+	"publishConfig": {
+		"access": "public"
+	},
+	"icon": "icon.png",
 	"galleryBanner": {
 		"color": "#ffffff",
 		"theme": "light"
 	},
-	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandJupyterSlideshow#readme",
-	"icon": "icon.png",
-	"keywords": [
-		"land"
-	],
-	"license": "SEE LICENSE IN LICENSE",
-	"main": "./out/extension-node.js",
-	"name": "vscode-jupyter-slideshow",
-	"preview": true,
-	"private": false,
-	"publishConfig": {
-		"access": "public"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+HTTPS://github.com/CodeEditorLand/LandJupyterSlideshow.git"
-	},
-	"scripts": {
-		"Document": "Document 'Source/**/*.ts'",
-		"compile": "webpack --mode none",
-		"prepublishOnly": "Build 'Source/**/*.ts'"
-	},
-	"type": "module",
-	"version": "0.0.1"
+	"preview": true
 }
