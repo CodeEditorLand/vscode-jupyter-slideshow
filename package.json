@@ -1,27 +1,7 @@
 {
 	"name": "vscode-jupyter-slideshow",
 	"displayName": "Jupyter Slide Show",
-	"version": "0.0.1",
-	"private": false,
 	"description": "Jupyter Slide Show support for VS Code",
-	"keywords": [
-		"land"
-	],
-	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandJupyterSlideshow#readme",
-	"bugs": {
-		"url": "HTTPS://GitHub.Com/CodeEditorLand/LandJupyterSlideshow/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+HTTPS://github.com/CodeEditorLand/LandJupyterSlideshow.git"
-	},
-	"license": "SEE LICENSE IN LICENSE",
-	"author": {
-		"name": "🛬 Land —",
-		"email": "Land@PlayForm.Cloud",
-		"url": "HTTPS://Land.PlayForm.Cloud"
-	},
-	"type": "module",
 	"main": "./out/extension-node.js",
 	"browser": "./out/extension-web.js",
 	"scripts": {
@@ -61,14 +41,10 @@
 	],
 	"devDependencies": {
 		"@playform/build": "0.0.7",
-		"@playform/document": "0.0.6",
 		"@types/glob": "8.1.0",
 		"@types/node": "20.x",
 		"glob": "10.3.12",
 		"ts-loader": "9.5.1"
-	},
-	"publishConfig": {
-		"access": "public"
 	},
 	"icon": "icon.png",
 	"galleryBanner": {
