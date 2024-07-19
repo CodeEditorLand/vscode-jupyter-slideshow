@@ -38,10 +38,10 @@
 		"onCommand:jupyter-slideshow.editSlideShowInJSON"
 	],
 	"devDependencies": {
-		"@types/glob": "8.1.0",
-		"@types/node": "20.x",
-		"glob": "11.0.0",
-		"ts-loader": "9.5.1"
+		"@types/glob": "7.1.3",
+		"@types/node": "14.x",
+		"glob": "7.1.7",
+		"ts-loader": "9.1.1"
 	},
 	"icon": "icon.png",
 	"galleryBanner": {
