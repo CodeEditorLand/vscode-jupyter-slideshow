@@ -33,7 +33,7 @@
 	"description": "Jupyter Slide Show support for VS Code",
 	"devDependencies": {
 		"@types/glob": "8.1.0",
-		"@types/node": "22.x",
+		"@types/node": "22.8.4",
 		"glob": "11.0.0",
 		"ts-loader": "9.5.1"
 	},
