@@ -22,6 +22,7 @@ export class CellSlideShowStatusBarProvider
 		token: vscode.CancellationToken,
 	): vscode.ProviderResult<vscode.NotebookCellStatusBarItem[]> {
 		const items: vscode.NotebookCellStatusBarItem[] = [];
+
 		const slideType = getSlideType(cell);
 
 		if (slideType) {
@@ -40,6 +41,7 @@ export class CellSlideShowStatusBarProvider
 export function getActiveCell() {
 	// find active cell
 	const editor = vscode.window.activeNotebookEditor;
+
 	if (!editor) {
 		return;
 	}
@@ -66,13 +68,16 @@ export function reviveCell(
 
 	if (args && "scheme" in args && "path" in args) {
 		const cellUri = vscode.Uri.from(args);
+
 		const cellUriStr = cellUri.toString();
+
 		let activeCell: vscode.NotebookCell | undefined = undefined;
 
 		for (const document of vscode.workspace.notebookDocuments) {
 			for (const cell of document.getCells()) {
 				if (cell.document.uri.toString() === cellUriStr) {
 					activeCell = cell;
+
 					break;
 				}
 			}
@@ -101,12 +106,14 @@ export function register(context: vscode.ExtensionContext) {
 			"jupyter-slideshow.switchSlideType",
 			async (cell: vscode.NotebookCell | vscode.Uri | undefined) => {
 				cell = reviveCell(cell);
+
 				if (!cell) {
 					return;
 				}
 
 				// create quick pick items for each slide type
 				const items: vscode.QuickPickItem[] = [];
+
 				for (const type in SlideShowType) {
 					items.push({
 						label: type,
@@ -132,24 +139,32 @@ export function register(context: vscode.ExtensionContext) {
 			"jupyter-slideshow.editSlideShowInJSON",
 			async (cell: vscode.NotebookCell | vscode.Uri | undefined) => {
 				cell = reviveCell(cell);
+
 				if (!cell) {
 					return;
 				}
 
 				const resourceUri = cell.notebook.uri;
+
 				const document =
 					await vscode.workspace.openTextDocument(resourceUri);
+
 				const tree = json.parseTree(document.getText());
+
 				const cells = json.findNodeAtLocation(tree, ["cells"]);
+
 				if (cells && cells.children && cells.children[cell.index]) {
 					const cellNode = cells.children[cell.index];
+
 					const metadata = json.findNodeAtLocation(cellNode, [
 						"metadata",
 					]);
+
 					if (metadata) {
 						const slideshow = json.findNodeAtLocation(metadata, [
 							"slideshow",
 						]);
+
 						if (slideshow) {
 							const range = new vscode.Range(
 								document.positionAt(slideshow.offset),
@@ -198,6 +213,7 @@ export function getSlideType(
 		(useCustomMetadata()
 			? cell.metadata.custom?.metadata?.slideshow
 			: cell.metadata.metadata?.slideshow) ?? undefined;
+
 	return slideshow?.slide_type;
 }
 export async function updateSlideType(
@@ -209,9 +225,11 @@ export async function updateSlideType(
 	}
 
 	const metadata = JSON.parse(JSON.stringify(cell.metadata));
+
 	if (useCustomMetadata()) {
 		metadata.custom = metadata.custom || {};
 		metadata.custom.metadata = metadata.custom.metadata || {};
+
 		if (!slideType) {
 			if (metadata.custom.metadata.slideshow) {
 				delete metadata.custom.metadata.slideshow;
@@ -223,6 +241,7 @@ export async function updateSlideType(
 		}
 	} else {
 		metadata.metadata = metadata.metadata || {};
+
 		if (!slideType) {
 			if (metadata.metadata.slideshow) {
 				delete metadata.metadata.slideshow;
@@ -233,6 +252,7 @@ export async function updateSlideType(
 		}
 	}
 	const edit = new vscode.WorkspaceEdit();
+
 	const nbEdit = vscode.NotebookEdit.updateCellMetadata(
 		cell.index,
 		sortObjectPropertiesRecursively(metadata),
@@ -270,6 +290,7 @@ function sortObjectPropertiesRecursively(obj: any): any {
 			.sort()
 			.reduce<Record<string, any>>((sortedObj, prop) => {
 				sortedObj[prop] = sortObjectPropertiesRecursively(obj[prop]);
+
 				return sortedObj;
 			}, {}) as any;
 	}
