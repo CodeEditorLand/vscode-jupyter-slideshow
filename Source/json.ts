@@ -116,6 +116,7 @@ export interface Node {
 }
 
 export type Segment = string | number;
+
 export type JSONPath = Segment[];
 
 export interface Location {
