@@ -128,6 +128,7 @@ export function register(context: vscode.ExtensionContext) {
 						selected.label === SlideShowType.none
 							? undefined
 							: selected.label;
+
 					await updateSlideType(cell, selectedType);
 				}
 			},
@@ -172,6 +173,7 @@ export function register(context: vscode.ExtensionContext) {
 									slideshow.offset + slideshow.length,
 								),
 							);
+
 							await vscode.window.showTextDocument(document, {
 								selection: range,
 								viewColumn: vscode.ViewColumn.Beside,
@@ -183,6 +185,7 @@ export function register(context: vscode.ExtensionContext) {
 									metadata.offset + metadata.length,
 								),
 							);
+
 							await vscode.window.showTextDocument(document, {
 								selection: range,
 								viewColumn: vscode.ViewColumn.Beside,
@@ -195,6 +198,7 @@ export function register(context: vscode.ExtensionContext) {
 								cellNode.offset + cellNode.length,
 							),
 						);
+
 						await vscode.window.showTextDocument(document, {
 							selection: range,
 							viewColumn: vscode.ViewColumn.Beside,
@@ -228,6 +232,7 @@ export async function updateSlideType(
 
 	if (useCustomMetadata()) {
 		metadata.custom = metadata.custom || {};
+
 		metadata.custom.metadata = metadata.custom.metadata || {};
 
 		if (!slideType) {
@@ -237,6 +242,7 @@ export async function updateSlideType(
 		} else {
 			metadata.custom.metadata.slideshow =
 				metadata.custom.metadata.slideshow || {};
+
 			metadata.custom.metadata.slideshow.slide_type = slideType;
 		}
 	} else {
@@ -248,16 +254,20 @@ export async function updateSlideType(
 			}
 		} else {
 			metadata.metadata.slideshow = metadata.metadata.slideshow || {};
+
 			metadata.metadata.slideshow.slide_type = slideType;
 		}
 	}
+
 	const edit = new vscode.WorkspaceEdit();
 
 	const nbEdit = vscode.NotebookEdit.updateCellMetadata(
 		cell.index,
 		sortObjectPropertiesRecursively(metadata),
 	);
+
 	edit.set(cell.notebook.uri, [nbEdit]);
+
 	await vscode.workspace.applyEdit(edit);
 }
 
@@ -268,6 +278,7 @@ function useCustomMetadata() {
 	) {
 		return false;
 	}
+
 	return true;
 }
 
@@ -280,6 +291,7 @@ function sortObjectPropertiesRecursively(obj: any): any {
 	if (Array.isArray(obj)) {
 		return obj.map(sortObjectPropertiesRecursively);
 	}
+
 	if (
 		obj !== undefined &&
 		obj !== null &&
@@ -294,5 +306,6 @@ function sortObjectPropertiesRecursively(obj: any): any {
 				return sortedObj;
 			}, {}) as any;
 	}
+
 	return obj;
 }

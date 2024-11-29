@@ -73,7 +73,9 @@ export interface JSONScanner {
 
 export interface ParseError {
 	error: ParseErrorCode;
+
 	offset: number;
+
 	length: number;
 }
 
@@ -107,11 +109,17 @@ export type NodeType =
 
 export interface Node {
 	readonly type: NodeType;
+
 	readonly value?: any;
+
 	readonly offset: number;
+
 	readonly length: number;
+
 	readonly colonOffset?: number;
+
 	readonly parent?: Node;
+
 	readonly children?: Node[];
 }
 
@@ -143,7 +151,9 @@ export interface Location {
 
 export interface ParseOptions {
 	disallowComments?: boolean;
+
 	allowTrailingComma?: boolean;
+
 	allowEmptyContent?: boolean;
 }
 
@@ -241,20 +251,28 @@ export function createScanner(
 			} else {
 				break;
 			}
+
 			pos++;
+
 			digits++;
 		}
+
 		if (digits < count) {
 			hexValue = -1;
 		}
+
 		return hexValue;
 	}
 
 	function setPosition(newPosition: number) {
 		pos = newPosition;
+
 		value = "";
+
 		tokenOffset = 0;
+
 		token = SyntaxKind.Unknown;
+
 		scanError = ScanError.None;
 	}
 
@@ -270,6 +288,7 @@ export function createScanner(
 				pos++;
 			}
 		}
+
 		if (pos < text.length && text.charCodeAt(pos) === CharacterCodes.dot) {
 			pos++;
 
@@ -285,6 +304,7 @@ export function createScanner(
 				return text.substring(start, pos);
 			}
 		}
+
 		let end = pos;
 
 		if (
@@ -301,17 +321,20 @@ export function createScanner(
 			) {
 				pos++;
 			}
+
 			if (pos < text.length && isDigit(text.charCodeAt(pos))) {
 				pos++;
 
 				while (pos < text.length && isDigit(text.charCodeAt(pos))) {
 					pos++;
 				}
+
 				end = pos;
 			} else {
 				scanError = ScanError.UnexpectedEndOfNumber;
 			}
 		}
+
 		return text.substring(start, end);
 	}
 
@@ -322,20 +345,25 @@ export function createScanner(
 		while (true) {
 			if (pos >= len) {
 				result += text.substring(start, pos);
+
 				scanError = ScanError.UnexpectedEndOfString;
 
 				break;
 			}
+
 			const ch = text.charCodeAt(pos);
 
 			if (ch === CharacterCodes.doubleQuote) {
 				result += text.substring(start, pos);
+
 				pos++;
 
 				break;
 			}
+
 			if (ch === CharacterCodes.backslash) {
 				result += text.substring(start, pos);
+
 				pos++;
 
 				if (pos >= len) {
@@ -343,6 +371,7 @@ export function createScanner(
 
 					break;
 				}
+
 				const ch2 = text.charCodeAt(pos++);
 
 				switch (ch2) {
@@ -394,18 +423,23 @@ export function createScanner(
 						} else {
 							scanError = ScanError.InvalidUnicode;
 						}
+
 						break;
 					}
+
 					default:
 						scanError = ScanError.InvalidEscapeCharacter;
 				}
+
 				start = pos;
 
 				continue;
 			}
+
 			if (ch >= 0 && ch <= 0x1f) {
 				if (isLineBreak(ch)) {
 					result += text.substring(start, pos);
+
 					scanError = ScanError.UnexpectedEndOfString;
 
 					break;
@@ -414,13 +448,16 @@ export function createScanner(
 					// mark as error but continue with string
 				}
 			}
+
 			pos++;
 		}
+
 		return result;
 	}
 
 	function scanNext(): SyntaxKind {
 		value = "";
+
 		scanError = ScanError.None;
 
 		tokenOffset = pos;
@@ -437,7 +474,9 @@ export function createScanner(
 		if (isWhitespace(code)) {
 			do {
 				pos++;
+
 				value += String.fromCharCode(code);
+
 				code = text.charCodeAt(pos);
 			} while (isWhitespace(code));
 
@@ -447,6 +486,7 @@ export function createScanner(
 		// trivia: newlines
 		if (isLineBreak(code)) {
 			pos++;
+
 			value += String.fromCharCode(code);
 
 			if (
@@ -454,8 +494,10 @@ export function createScanner(
 				text.charCodeAt(pos) === CharacterCodes.lineFeed
 			) {
 				pos++;
+
 				value += "\n";
 			}
+
 			return (token = SyntaxKind.LineBreakTrivia);
 		}
 
@@ -494,6 +536,7 @@ export function createScanner(
 			// strings
 			case CharacterCodes.doubleQuote:
 				pos++;
+
 				value = scanString();
 
 				return (token = SyntaxKind.StringLiteral);
@@ -509,8 +552,10 @@ export function createScanner(
 						if (isLineBreak(text.charCodeAt(pos))) {
 							break;
 						}
+
 						pos++;
 					}
+
 					value = text.substring(start, pos);
 
 					return (token = SyntaxKind.LineCommentTrivia);
@@ -531,15 +576,18 @@ export function createScanner(
 							text.charCodeAt(pos + 1) === CharacterCodes.slash
 						) {
 							pos += 2;
+
 							commentClosed = true;
 
 							break;
 						}
+
 						pos++;
 					}
 
 					if (!commentClosed) {
 						pos++;
+
 						scanError = ScanError.UnexpectedEndOfComment;
 					}
 
@@ -549,6 +597,7 @@ export function createScanner(
 				}
 				// just a single slash
 				value += String.fromCharCode(code);
+
 				pos++;
 
 				return (token = SyntaxKind.Unknown);
@@ -556,6 +605,7 @@ export function createScanner(
 			// numbers
 			case CharacterCodes.minus:
 				value += String.fromCharCode(code);
+
 				pos++;
 
 				if (pos === len || !isDigit(text.charCodeAt(pos))) {
@@ -582,8 +632,10 @@ export function createScanner(
 				// is a literal? Read the full word.
 				while (pos < len && isUnknownContentCharacter(code)) {
 					pos++;
+
 					code = text.charCodeAt(pos);
 				}
+
 				if (tokenOffset !== pos) {
 					value = text.substring(tokenOffset, pos);
 					// keywords: true, false, null
@@ -597,10 +649,12 @@ export function createScanner(
 						case "null":
 							return (token = SyntaxKind.NullKeyword);
 					}
+
 					return (token = SyntaxKind.Unknown);
 				}
 				// some
 				value += String.fromCharCode(code);
+
 				pos++;
 
 				return (token = SyntaxKind.Unknown);
@@ -611,6 +665,7 @@ export function createScanner(
 		if (isWhitespace(code) || isLineBreak(code)) {
 			return false;
 		}
+
 		switch (code) {
 			case CharacterCodes.closeBrace:
 			case CharacterCodes.closeBracket:
@@ -622,6 +677,7 @@ export function createScanner(
 			case CharacterCodes.slash:
 				return false;
 		}
+
 		return true;
 	}
 
@@ -787,6 +843,7 @@ const enum CharacterCodes {
 	bar = 0x7c, // |
 	caret = 0x5e, // ^
 	closeBrace = 0x7d, // }
+
 	closeBracket = 0x5d, // ]
 	closeParen = 0x29, // )
 	colon = 0x3a, // :
@@ -805,6 +862,7 @@ const enum CharacterCodes {
 	plus = 0x2b, // +
 	question = 0x3f, // ?
 	semicolon = 0x3b, // ;
+
 	singleQuote = 0x27, // '
 	slash = 0x2f, // /
 	tilde = 0x7e, // ~
@@ -818,11 +876,17 @@ const enum CharacterCodes {
 
 interface NodeImpl extends Node {
 	type: NodeType;
+
 	value?: any;
+
 	offset: number;
+
 	length: number;
+
 	colonOffset?: number;
+
 	parent?: NodeImpl;
+
 	children?: NodeImpl[];
 }
 
@@ -852,20 +916,29 @@ export function getLocation(text: string, position: number): Location {
 		type: NodeType,
 	) {
 		previousNodeInst.value = value;
+
 		previousNodeInst.offset = offset;
+
 		previousNodeInst.length = length;
+
 		previousNodeInst.type = type;
+
 		previousNodeInst.colonOffset = undefined;
+
 		previousNode = previousNodeInst;
 	}
+
 	try {
 		visit(text, {
 			onObjectBegin: (offset: number, length: number) => {
 				if (position <= offset) {
 					throw earlyReturnException;
 				}
+
 				previousNode = undefined;
+
 				isAtPropertyKey = position > offset;
+
 				segments.push(""); // push a placeholder (will be replaced)
 			},
 			onObjectProperty: (
@@ -876,7 +949,9 @@ export function getLocation(text: string, position: number): Location {
 				if (position < offset) {
 					throw earlyReturnException;
 				}
+
 				setPreviousNode(name, offset, length, "property");
+
 				segments[segments.length - 1] = name;
 
 				if (position <= offset + length) {
@@ -887,27 +962,34 @@ export function getLocation(text: string, position: number): Location {
 				if (position <= offset) {
 					throw earlyReturnException;
 				}
+
 				previousNode = undefined;
+
 				segments.pop();
 			},
 			onArrayBegin: (offset: number, length: number) => {
 				if (position <= offset) {
 					throw earlyReturnException;
 				}
+
 				previousNode = undefined;
+
 				segments.push(0);
 			},
 			onArrayEnd: (offset: number, length: number) => {
 				if (position <= offset) {
 					throw earlyReturnException;
 				}
+
 				previousNode = undefined;
+
 				segments.pop();
 			},
 			onLiteralValue: (value: any, offset: number, length: number) => {
 				if (position < offset) {
 					throw earlyReturnException;
 				}
+
 				setPreviousNode(value, offset, length, getNodeType(value));
 
 				if (position <= offset + length) {
@@ -918,13 +1000,16 @@ export function getLocation(text: string, position: number): Location {
 				if (position <= offset) {
 					throw earlyReturnException;
 				}
+
 				if (
 					sep === ":" &&
 					previousNode &&
 					previousNode.type === "property"
 				) {
 					previousNode.colonOffset = offset;
+
 					isAtPropertyKey = false;
+
 					previousNode = undefined;
 				} else if (sep === ",") {
 					const last = segments[segments.length - 1];
@@ -933,8 +1018,10 @@ export function getLocation(text: string, position: number): Location {
 						segments[segments.length - 1] = last + 1;
 					} else {
 						isAtPropertyKey = true;
+
 						segments[segments.length - 1] = "";
 					}
+
 					previousNode = undefined;
 				}
 			},
@@ -959,6 +1046,7 @@ export function getLocation(text: string, position: number): Location {
 					return false;
 				}
 			}
+
 			return k === pattern.length;
 		},
 	};
@@ -990,9 +1078,13 @@ export function parse(
 	const visitor: JSONVisitor = {
 		onObjectBegin: () => {
 			const object = {};
+
 			onValue(object);
+
 			previousParents.push(currentParent);
+
 			currentParent = object;
+
 			currentProperty = null;
 		},
 		onObjectProperty: (name: string) => {
@@ -1003,9 +1095,13 @@ export function parse(
 		},
 		onArrayBegin: () => {
 			const array: any[] = [];
+
 			onValue(array);
+
 			previousParents.push(currentParent);
+
 			currentParent = array;
+
 			currentProperty = null;
 		},
 		onArrayEnd: () => {
@@ -1016,6 +1112,7 @@ export function parse(
 			errors.push({ error, offset, length });
 		},
 	};
+
 	visit(text, visitor, options);
 
 	return currentParent[0];
@@ -1040,6 +1137,7 @@ export function parseTree(
 	function ensurePropertyComplete(endOffset: number) {
 		if (currentParent.type === "property") {
 			currentParent.length = endOffset - currentParent.offset;
+
 			currentParent = currentParent.parent!;
 		}
 	}
@@ -1068,6 +1166,7 @@ export function parseTree(
 				parent: currentParent,
 				children: [],
 			});
+
 			currentParent.children!.push({
 				type: "string",
 				value: name,
@@ -1078,7 +1177,9 @@ export function parseTree(
 		},
 		onObjectEnd: (offset: number, length: number) => {
 			currentParent.length = offset + length - currentParent.offset;
+
 			currentParent = currentParent.parent!;
+
 			ensurePropertyComplete(offset + length);
 		},
 		onArrayBegin: (offset: number, length: number) => {
@@ -1092,7 +1193,9 @@ export function parseTree(
 		},
 		onArrayEnd: (offset: number, length: number) => {
 			currentParent.length = offset + length - currentParent.offset;
+
 			currentParent = currentParent.parent!;
+
 			ensurePropertyComplete(offset + length);
 		},
 		onLiteralValue: (value: any, offset: number, length: number) => {
@@ -1103,6 +1206,7 @@ export function parseTree(
 				parent: currentParent,
 				value,
 			});
+
 			ensurePropertyComplete(offset + length);
 		},
 		onSeparator: (sep: string, offset: number, length: number) => {
@@ -1118,6 +1222,7 @@ export function parseTree(
 			errors.push({ error, offset, length });
 		},
 	};
+
 	visit(text, visitor, options);
 
 	const result = currentParent.children![0];
@@ -1125,6 +1230,7 @@ export function parseTree(
 	if (result) {
 		delete result.parent;
 	}
+
 	return result;
 }
 
@@ -1138,6 +1244,7 @@ export function findNodeAtLocation(
 	if (!root) {
 		return undefined;
 	}
+
 	let node = root;
 
 	for (const segment of path) {
@@ -1145,6 +1252,7 @@ export function findNodeAtLocation(
 			if (node.type !== "object" || !Array.isArray(node.children)) {
 				return undefined;
 			}
+
 			let found = false;
 
 			for (const propertyNode of node.children) {
@@ -1153,11 +1261,13 @@ export function findNodeAtLocation(
 					propertyNode.children[0].value === segment
 				) {
 					node = propertyNode.children[1];
+
 					found = true;
 
 					break;
 				}
 			}
+
 			if (!found) {
 				return undefined;
 			}
@@ -1172,9 +1282,11 @@ export function findNodeAtLocation(
 			) {
 				return undefined;
 			}
+
 			node = node.children[index];
 		}
 	}
+
 	return node;
 }
 
@@ -1185,10 +1297,12 @@ export function getNodePath(node: Node): JSONPath {
 	if (!node.parent || !node.parent.children) {
 		return [];
 	}
+
 	const path = getNodePath(node.parent);
 
 	if (node.parent.type === "property") {
 		const key = node.parent.children[0].value;
+
 		path.push(key);
 	} else if (node.parent.type === "array") {
 		const index = node.parent.children.indexOf(node);
@@ -1197,6 +1311,7 @@ export function getNodePath(node: Node): JSONPath {
 			path.push(index);
 		}
 	}
+
 	return path;
 }
 
@@ -1218,8 +1333,10 @@ export function getNodeValue(node: Node): any {
 					obj[prop.children![0].value] = getNodeValue(valueNode);
 				}
 			}
+
 			return obj;
 		}
+
 		case "null":
 		case "string":
 		case "number":
@@ -1256,7 +1373,9 @@ export function findNodeAtOffset(
 		if (Array.isArray(children)) {
 			for (
 				let i = 0;
+
 				i < children.length && children[i].offset <= offset;
+
 				i++
 			) {
 				const item = findNodeAtOffset(
@@ -1270,8 +1389,10 @@ export function findNodeAtOffset(
 				}
 			}
 		}
+
 		return node;
 	}
+
 	return undefined;
 }
 
@@ -1296,6 +1417,7 @@ export function visit(
 					)
 			: () => true;
 	}
+
 	function toOneArgVisit<T>(
 		visitFunction?: (arg: T, offset: number, length: number) => void,
 	): (arg: T) => void {
@@ -1347,6 +1469,7 @@ export function visit(
 					if (!disallowComments) {
 						handleError(ParseErrorCode.UnexpectedEndOfComment);
 					}
+
 					break;
 
 				case ScanError.UnexpectedEndOfString:
@@ -1359,6 +1482,7 @@ export function visit(
 
 					break;
 			}
+
 			switch (token) {
 				case SyntaxKind.LineCommentTrivia:
 				case SyntaxKind.BlockCommentTrivia:
@@ -1367,6 +1491,7 @@ export function visit(
 					} else {
 						onComment();
 					}
+
 					break;
 
 				case SyntaxKind.Unknown:
@@ -1402,6 +1527,7 @@ export function visit(
 				} else if (skipUntil.indexOf(token) !== -1) {
 					break;
 				}
+
 				token = scanNext();
 			}
 		}
@@ -1415,6 +1541,7 @@ export function visit(
 		} else {
 			onObjectProperty(value);
 		}
+
 		scanNext();
 
 		return true;
@@ -1430,15 +1557,18 @@ export function visit(
 
 					if (typeof value !== "number") {
 						handleError(ParseErrorCode.InvalidNumberFormat);
+
 						value = 0;
 					}
 				} catch (e) {
 					handleError(ParseErrorCode.InvalidNumberFormat);
 				}
+
 				onLiteralValue(value);
 
 				break;
 			}
+
 			case SyntaxKind.NullKeyword:
 				onLiteralValue(null);
 
@@ -1457,6 +1587,7 @@ export function visit(
 			default:
 				return false;
 		}
+
 		scanNext();
 
 		return true;
@@ -1472,10 +1603,12 @@ export function visit(
 
 			return false;
 		}
+
 		parseString(false);
 
 		if (_scanner.getToken() === SyntaxKind.ColonToken) {
 			onSeparator(":");
+
 			scanNext(); // consume colon
 
 			if (!parseValue()) {
@@ -1492,11 +1625,13 @@ export function visit(
 				[SyntaxKind.CloseBraceToken, SyntaxKind.CommaToken],
 			);
 		}
+
 		return true;
 	}
 
 	function parseObject(): boolean {
 		onObjectBegin();
+
 		scanNext(); // consume open brace
 
 		let needsComma = false;
@@ -1509,7 +1644,9 @@ export function visit(
 				if (!needsComma) {
 					handleError(ParseErrorCode.ValueExpected, [], []);
 				}
+
 				onSeparator(",");
+
 				scanNext(); // consume comma
 				if (
 					_scanner.getToken() === SyntaxKind.CloseBraceToken &&
@@ -1520,6 +1657,7 @@ export function visit(
 			} else if (needsComma) {
 				handleError(ParseErrorCode.CommaExpected, [], []);
 			}
+
 			if (!parseProperty()) {
 				handleError(
 					ParseErrorCode.ValueExpected,
@@ -1527,8 +1665,10 @@ export function visit(
 					[SyntaxKind.CloseBraceToken, SyntaxKind.CommaToken],
 				);
 			}
+
 			needsComma = true;
 		}
+
 		onObjectEnd();
 
 		if (_scanner.getToken() !== SyntaxKind.CloseBraceToken) {
@@ -1540,11 +1680,13 @@ export function visit(
 		} else {
 			scanNext(); // consume close brace
 		}
+
 		return true;
 	}
 
 	function parseArray(): boolean {
 		onArrayBegin();
+
 		scanNext(); // consume open bracket
 
 		let needsComma = false;
@@ -1557,7 +1699,9 @@ export function visit(
 				if (!needsComma) {
 					handleError(ParseErrorCode.ValueExpected, [], []);
 				}
+
 				onSeparator(",");
+
 				scanNext(); // consume comma
 				if (
 					_scanner.getToken() === SyntaxKind.CloseBracketToken &&
@@ -1568,6 +1712,7 @@ export function visit(
 			} else if (needsComma) {
 				handleError(ParseErrorCode.CommaExpected, [], []);
 			}
+
 			if (!parseValue()) {
 				handleError(
 					ParseErrorCode.ValueExpected,
@@ -1575,8 +1720,10 @@ export function visit(
 					[SyntaxKind.CloseBracketToken, SyntaxKind.CommaToken],
 				);
 			}
+
 			needsComma = true;
 		}
+
 		onArrayEnd();
 
 		if (_scanner.getToken() !== SyntaxKind.CloseBracketToken) {
@@ -1588,6 +1735,7 @@ export function visit(
 		} else {
 			scanNext(); // consume close bracket
 		}
+
 		return true;
 	}
 
@@ -1613,18 +1761,22 @@ export function visit(
 		if (options.allowEmptyContent) {
 			return true;
 		}
+
 		handleError(ParseErrorCode.ValueExpected, [], []);
 
 		return false;
 	}
+
 	if (!parseValue()) {
 		handleError(ParseErrorCode.ValueExpected, [], []);
 
 		return false;
 	}
+
 	if (_scanner.getToken() !== SyntaxKind.EOF) {
 		handleError(ParseErrorCode.EndOfFileExpected, [], []);
 	}
+
 	return true;
 }
 
@@ -1646,6 +1798,7 @@ export function stripComments(text: string, replaceCh?: string): string {
 
 	do {
 		pos = _scanner.getPosition();
+
 		kind = _scanner.scan();
 
 		switch (kind) {
@@ -1655,11 +1808,13 @@ export function stripComments(text: string, replaceCh?: string): string {
 				if (offset !== pos) {
 					parts.push(text.substring(offset, pos));
 				}
+
 				if (replaceCh !== undefined) {
 					parts.push(
 						_scanner.getTokenValue().replace(/[^\r\n]/g, replaceCh),
 					);
 				}
+
 				offset = _scanner.getPosition();
 
 				break;
@@ -1686,8 +1841,10 @@ export function getNodeType(value: any): NodeType {
 			} else if (Array.isArray(value)) {
 				return "array";
 			}
+
 			return "object";
 		}
+
 		default:
 			return "null";
 	}
