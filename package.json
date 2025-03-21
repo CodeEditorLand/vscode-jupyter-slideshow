@@ -1,12 +1,10 @@
 {
-	"name": "@codeeditorland/jupyter-slideshow",
-	"displayName": "Jupyter Slide Show",
-	"description": "Jupyter Slide Show support for VS Code",
-	"main": "./out/extension-node.js",
+	"activationEvents": [
+		"onNotebook:jupyter-notebook",
+		"onCommand:jupyter-slideshow.switchSlideType",
+		"onCommand:jupyter-slideshow.editSlideShowInJSON"
+	],
 	"browser": "./out/extension-web.js",
-	"scripts": {
-		"compile": "webpack --mode none"
-	},
 	"contributes": {
 		"commands": [
 			{
@@ -32,22 +30,24 @@
 			]
 		}
 	},
-	"activationEvents": [
-		"onNotebook:jupyter-notebook",
-		"onCommand:jupyter-slideshow.switchSlideType",
-		"onCommand:jupyter-slideshow.editSlideShowInJSON"
-	],
 	"dependencies": {},
+	"description": "Jupyter Slide Show support for VS Code",
 	"devDependencies": {
 		"@types/glob": "8.1.0",
 		"@types/node": "22.13.9",
 		"glob": "11.0.1",
 		"ts-loader": "9.5.2"
 	},
-	"icon": "icon.png",
+	"displayName": "Jupyter Slide Show",
 	"galleryBanner": {
 		"color": "#ffffff",
 		"theme": "light"
 	},
-	"preview": true
+	"icon": "icon.png",
+	"main": "./out/extension-node.js",
+	"name": "@codeeditorland/jupyter-slideshow",
+	"preview": true,
+	"scripts": {
+		"compile": "webpack --mode none"
+	}
 }
